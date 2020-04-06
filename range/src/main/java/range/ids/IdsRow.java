@@ -1,4 +1,4 @@
-package range;
+package range.ids;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

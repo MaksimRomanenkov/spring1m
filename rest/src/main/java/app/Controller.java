@@ -29,7 +29,7 @@ public class Controller {
     }
 
     @GetMapping("/get")
-    public Long getId0() {
+    public Long getId() {
         long andIncrement = currentId.getAndIncrement();
         if (andIncrement == endId) {
             init();

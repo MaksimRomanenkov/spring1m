@@ -1,4 +1,4 @@
-package range;
+package range.ids;
 
 import org.springframework.data.repository.CrudRepository;
 
