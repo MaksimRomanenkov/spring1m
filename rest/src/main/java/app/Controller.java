@@ -18,10 +18,10 @@ public class Controller {
     private String rangeUrl;
 
     private AtomicLong currentId;
-    private Long endId;
+    private volatile Long endId;
 
     @PostConstruct
-    void init() {
+    private synchronized void init() {
         long[] newIds = restTemplate.postForEntity(rangeUrl, "name", long[].class)
                 .getBody();
         currentId = new AtomicLong(newIds[0]);
@@ -30,10 +30,18 @@ public class Controller {
 
     @GetMapping("/get")
     public Long getId() {
-        long andIncrement = currentId.getAndIncrement();
-        if (andIncrement == endId) {
-            init();
+        long result = currentId.getAndIncrement();
+        if (result >= endId) {
+            synchronized (this) {
+                long andIncrement = currentId.getAndIncrement();
+                if (andIncrement >= endId) {
+                    init();
+                    return currentId.getAndIncrement();
+                }
+                return andIncrement;
+            }
+        } else {
+            return result;
         }
-        return andIncrement;
     }
 }

@@ -14,7 +14,7 @@ public class IdsServiceImpl implements IdsService {
     private final IdsRepository idsRepository;
 
     @Override
-    public Long[] getRange(String serviceName) {
+    public synchronized Long[] getRange(String serviceName) {
         IdsRow topByEndId = idsRepository.findTopByOrderByEndIdDesc();
         Long startId = topByEndId == null ? 0L : topByEndId.getEndId() + 1;
         IdsRow save = idsRepository.save(new IdsRow()
